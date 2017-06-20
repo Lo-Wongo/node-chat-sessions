@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const mc = require( `${__dirname}/controllers/messages_controller` );
 
-const filter = require( `${__dirname}/middleware/filter.js` );
+const createInitialSession = require( `${__dirname}/middlewares/session.js` );
+const filter = require( `${__dirname}/middlewares/filter.js`);
 
 const app = express();
 
@@ -16,20 +17,14 @@ app.use( session({
   cookie: { maxAge: 10000 }
 }));
 
+app.use( ( req, res, next ) => createInitialSession( req, res, next ) );
 app.use( ( req, res, next ) => {
-  const { session, method } = req;
-  if ( !session.user ) {
-    session.user = {
-      messages: []
-    };
-  }
-
   if ( method === "POST" ) {
     filter( req, res, next );
   } else {
     next();
   }
-} );
+});
 
 const messagesBaseUrl = "/api/messages";
 app.post( messagesBaseUrl, mc.create );

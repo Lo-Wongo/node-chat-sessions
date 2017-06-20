@@ -69,12 +69,36 @@ In this step, we'll create custom middleware that will check to see if the sessi
 
 ### Instructions
 
-* Open `server/index.js`.
-* Create middleware that is a function that has a `req`, `res`, and `next` parameter.
+* Create a folder called `middlewares` in `server/`.
+* Create a file called `session` in `server/middlewares/session.js`.
+* Open `server/middlewares/session.js`.
+* Use `module.exports` to export a function with a `req`, `res`, and `next` parameter.
 * Inside the function check if `req.session` has a user property, if it doesn't add a user property that equals an object with a `messages` array on it.
 * After the if statement, call `next`.
+* Open `server/index.js`.
+* Require `server/middlewares/session.js` in a variable called `createInitialSession`.
+* Add middleware to `app` that captures `req`, `res`, and `next` and then calls `createInitialSession` with `req`, `res`, and `next` as arguments.
 
 ### Solution
+
+<details>
+
+<summary> <code> server/middlewares/session.js </code> </summary>
+
+```js
+module.exports = function( req, res, next ) {
+  const { session, method } = req;
+  if ( !session.user ) {
+    session.user = {
+      messages: []
+    };
+  }
+
+  next();
+}
+```
+
+</details>
 
 <details>
 
@@ -85,6 +109,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const mc = require( `${__dirname}/controllers/messages_controller` );
+
+const createInitialSession = require( `${__dirname}/middlewares/session.js` );
 
 const app = express();
 
@@ -97,14 +123,7 @@ app.use( session({
   cookie: { maxAge: 10000 }
 }));
 
-app.use( ( req, res, next ) => {
-  const { session } = req;
-  if ( !session.user ) {
-    session.user = {
-      messages: []
-    };
-  }
-} );
+app.use( ( req, res, next ) => createInitialSession( req, res, next ) );
 
 const messagesBaseUrl = "/api/messages";
 app.post( messagesBaseUrl, mc.create );
@@ -126,9 +145,8 @@ In this step, we will create a filter middleware file that will handle filtering
 
 ### Instructions
 
-* Create a folder called `middleware` in `server/`.
-* Create a file called `filter.js` in `server/middleware/`.
-* Open `server/middleware/filter.js`.
+* Create a file called `filter.js` in `server/middlewares/`.
+* Open `server/middlewares/filter.js`.
 * At the very top of the file create an array of words that should be censored.
 * Use `module.exports` to export a function that has a `req`, `res`, and `next` parameter.
 * Copy in the following filter code:
@@ -147,6 +165,39 @@ In this step, we will create a filter middleware file that will handle filtering
 * Call `next` after the `while` loop.
 
 ### Solution
+
+<details>
+
+<summary> <code> server/middlewares/filter.js </code> </summary>
+
+```js
+const notAllowed = [ 'poo', 'butt' ];
+
+module.exports = function( req, res, next ) {
+  while ( notAllowed.find( word => req.body.text.includes(word) ) ) {
+    const badWord = notAllowed.find( word => req.body.text.includes(word) );
+    req.body.text = req.body.text.replace( badWord, '*'.repeat( badWord.length ) );
+  }
+
+  next();
+};
+```
+
+</details>
+
+## Step 4
+
+### Summary
+
+In this step, we'll require `server/middlewares/filter.js` in `server/index.js` and check if the method of the request is `POST`. If it is `POST` we'll call our `filter` middleware to `filter` the `text` from the `request` body.
+
+### Instructions
+
+
+
+### Solution
+
+
 
 
 
