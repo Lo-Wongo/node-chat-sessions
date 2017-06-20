@@ -6,6 +6,12 @@ In this project, we will take the afternoon project of the first day of Node and
 
 <b> insert image here </b>
 
+## Setup
+
+* Fork and clone this repository.
+* `cd` into the project.
+* Run `npm install`.
+
 ## Step 1
 
 ### Summary
@@ -14,7 +20,6 @@ In this step, we'll use `npm` to install `express-session`, require it in our `s
 
 ### Instructions
 
-* Run `npm install` to get all the previous packages if you need to.
 * Run `npm install --save express-session`.
 * Open `server/index.js` and require `express-session` in a variable called `session`.
 * Configure the app to use sessions using `app.use`.
