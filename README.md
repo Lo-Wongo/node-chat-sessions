@@ -24,7 +24,7 @@ In this step, we'll use `npm` to install `express-session`, require it in our `s
 * Open `server/index.js` and require `express-session` in a variable called `session`.
 * Configure the app to use sessions using `app.use`.
   * The first parameter should be `session` invoked with an object as its first argument.
-  * In the object define the value for `secret`, `resave`, and `saveUninitialized`.
+  * In the object define the value for `secret`, `resave`, `saveUninitialized`, and `cookie.maxAge`.
 
 ### Solution
 
@@ -45,7 +45,8 @@ app.use( express.static( `${__dirname}/../public/build` ) );
 app.use( session({
   secret: '@nyth!ng y0u w@nT',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { maxAge: 10000 }
 }));
 
 const messagesBaseUrl = "/api/messages";
@@ -60,3 +61,58 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 
 </details>
 
+## Step 2
+
+### Summary
+
+In this step, we'll create custom middleware that will check to see if the session has a `user` object. If it doesn't we'll add a user object that has a `messages` array on it.
+
+### Instructions
+
+* Open `server/index.js`.
+* Create middleware that is a function that has a `req`, `res`, and `next` parameter.
+* Inside the function check if `req.session` has a user property, if it doesn't add a user property that equals an object with a `messages` array on it.
+
+### Solution
+
+<details>
+
+<summary> <code> server/index.js </code> </summary>
+
+```js
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const mc = require( `${__dirname}/controllers/messages_controller` );
+
+const app = express();
+
+app.use( bodyParser.json() );
+app.use( express.static( `${__dirname}/../public/build` ) );
+app.use( session({
+  secret: '@nyth!ng y0u w@nT',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 10000 }
+}));
+
+app.use( ( req, res, next ) => {
+  const { session } = req;
+  if ( !session.user ) {
+    session.user = {
+      messages: []
+    };
+  }
+} );
+
+const messagesBaseUrl = "/api/messages";
+app.post( messagesBaseUrl, mc.create );
+app.get( messagesBaseUrl, mc.read );
+app.put( `${messagesBaseUrl}`, mc.update );
+app.delete( `${messagesBaseUrl}`, mc.delete );
+
+const port = 3000;
+app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
+```
+
+</details>

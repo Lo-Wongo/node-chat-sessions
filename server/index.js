@@ -11,7 +11,8 @@ app.use( express.static( `${__dirname}/../public/build` ) );
 app.use( session({
   secret: '@nyth!ng y0u w@nT',
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { maxAge: 10000 }
 }));
 
 app.use( ( req, res, next ) => {
