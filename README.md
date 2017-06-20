@@ -367,4 +367,22 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 
 </details>
 
+## Step 6
+
+### Summary
+
+In this step, we'll use the `front-end` to see if the `history` endpoint is working.
+
+### Instructions
+
+* Use `nodemon` or `node index.js` when in `server/` to start the server.
+* Go to `localhost:3000` in your browser.
+* Send some messages and then check the history.
+* Wait 10 seconds and re-check the history.
+  * The history should now be blank since the session has been set to expire in 10 seconds.
+
+### Solution
+
+<b> insert giphy here </b>
+
 
