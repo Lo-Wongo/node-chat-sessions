@@ -247,5 +247,124 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 
 </details>
 
+## Step 5
+
+### Summary
+
+In this step, we'll update the `messages` controller to add new messages to a user's session and modify the `update` and `delete` methods to use `query parameters` instead. We'll also add a `history` endpoint that will allow us to see messages on the session.
+
+### Instructions
+
+* Open `server/controllers/messages_controller.js`.
+* Modify the `create` method to add the new message object to the `messages` array on session as well.
+* Modify the `update` method to use `id` off the `request` query.
+* Modify the `delete` method to use `id` off the `request` query.
+* Create a `history` method that will return all `messages` on a user's session.
+* Open `server/index.js`.
+* Create a `GET` endpoint at `/api/messages/history` that calls the `history` method from the `messages` controller.
+
+### Solution
+
+<details>
+
+<summary> <code> server/controllers/messages_controller.js </code> </summary>
+
+```js
+let messages = [];
+let id = 0;
+
+module.exports = {
+  create: ( req, res ) => {
+    const { text, time } = req.body;
+    const { user } = req.session;
+
+    messages.push({ id, text, time });
+    user.messages.push({ id, text, time });
+    id++;
+
+    res.status(200).send( messages );
+  },
+
+  read: ( req, res ) => {
+    res.status(200).send( messages );
+  },
+
+  update: ( req, res ) => {
+    const { text } = req.body;
+    const updateID = req.query.id;
+    const messageIndex = messages.findIndex( message => message.id == updateID );
+    let message = messages[ messageIndex ];
+
+    messages[ messageIndex ] = {
+      id: message.id,
+      text: text || message.text,
+      time: message.time
+    };
+
+    res.status(200).send( messages );
+  },
+
+  delete: ( req, res ) => {
+    const deleteID = req.query.id;
+    messageIndex = messages.findIndex( message => message.id == deleteID );
+    messages.splice(messageIndex, 1);
+    res.status(200).send( messages );
+  },
+
+  history: ( req, res ) => {
+    const { user } = req.session;
+    res.status(200).send( user.messages );
+  }
+};
+```
+
+</details>
+
+<details>
+
+<summary> <code> server/index.js </code> </summary>
+
+```js
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const mc = require( `${__dirname}/controllers/messages_controller` );
+
+const createInitialSession = require( `${__dirname}/middlewares/session.js` );
+const filter = require( `${__dirname}/middlewares/filter.js`);
+
+const app = express();
+
+app.use( bodyParser.json() );
+app.use( express.static( `${__dirname}/../public/build` ) );
+app.use( session({
+  secret: '@nyth!ng y0u w@nT',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 10000 }
+}));
+
+app.use( ( req, res, next ) => createInitialSession( req, res, next ) );
+app.use( ( req, res, next ) => {
+  const { method } = req;
+  if ( method === "POST" ) {
+    filter( req, res, next );
+  } else {
+    next();
+  }
+});
+
+const messagesBaseUrl = "/api/messages";
+app.post( messagesBaseUrl, mc.create );
+app.get( messagesBaseUrl, mc.read );
+app.put( `${messagesBaseUrl}`, mc.update );
+app.delete( `${messagesBaseUrl}`, mc.delete );
+app.get( `${messagesBaseUrl}/history`, mc.history );
+
+const port = 3000;
+app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
+```
+
+</details>
 
 

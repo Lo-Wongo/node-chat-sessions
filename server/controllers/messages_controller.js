@@ -7,7 +7,7 @@ module.exports = {
     const { user } = req.session;
 
     messages.push({ id, text, time });
-    user.messages.push({ text, time });
+    user.messages.push({ id, text, time });
     id++;
 
     res.status(200).send( messages );
