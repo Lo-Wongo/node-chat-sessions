@@ -380,6 +380,7 @@ In this step, we'll use the `front-end` to see if the `history` endpoint is work
 * Send some messages and then check the history.
 * Wait 10 seconds and re-check the history.
   * The history should now be blank since the session has been set to expire in 10 seconds.
+  * To refresh the history, toggle it off and on. 
 
 ### Solution
 
