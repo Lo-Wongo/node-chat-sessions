@@ -65,13 +65,14 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 
 ### Summary
 
-In this step, we'll create custom middleware that will check to see if the session has a `user` object. If it doesn't we'll add a user object that has a `messages` array on it.
+In this step, we'll create custom middleware that will check to see if the session has a `user` object. If it doesn't, we'll add a user object that has a `messages` array on it.
 
 ### Instructions
 
 * Open `server/index.js`.
 * Create middleware that is a function that has a `req`, `res`, and `next` parameter.
 * Inside the function check if `req.session` has a user property, if it doesn't add a user property that equals an object with a `messages` array on it.
+* After the if statement, call `next`.
 
 ### Solution
 
@@ -116,3 +117,20 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 ```
 
 </details>
+
+## Step 3
+
+### Summary
+
+In this step, we will create a filter controller file that will handle filtering messages with profanity.
+
+### Instructions
+
+* Create a `filter_controller.js` file in `server/controllers`.
+* Open `server/controllers/filter_controller.js`.
+* At the very top of the file create an array of words that should be censored.
+
+### Solution
+
+
+
