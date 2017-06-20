@@ -5,21 +5,27 @@ import axios from "axios";
 import url from '../../api'
 
 import Message from './Message/Message';
+import History from './History/History';
 
 import dateCreator from '../../utils/dateCreator';
+
+import HistoryIcon from 'react-icons/lib/fa/history';
 
 export default class ChatWindow extends Component {
   constructor() {
     super();
     this.state = {
       messages: [],
-      text: ''
+      text: '',
+      showHistory: false,
+      history: []
     };
 
     this.handleChange = this.handleChange.bind( this );
     this.createMessage = this.createMessage.bind( this );
     this.editMessage = this.editMessage.bind( this );
     this.removeMessage = this.removeMessage.bind( this );
+    this.getHistory = this.getHistory.bind( this );
   }
 
   componentDidMount() {
@@ -56,6 +62,20 @@ export default class ChatWindow extends Component {
     });
   }
 
+  getHistory() {
+    console.log('getHistory called');
+    const { showHistory } = this.state;
+    if ( !showHistory ) {
+      console.log('fetching history');
+      this.setState({ showHistory: true });
+      axios.get( `${url}/history` ).then( response => {
+        this.setState({ history: response.data });
+      });
+    } else {
+      this.setState({ showHistory: false, history: [] });
+    }
+  }
+
   render() {
     return (
       <div id="ChatWindow__container">
@@ -74,7 +94,11 @@ export default class ChatWindow extends Component {
                  onChange={ this.handleChange }
                  value={ this.state.text }
           />
+          <div id="ChatWindow__historyBtn">
+            <HistoryIcon onClick={ this.getHistory } />
+          </div>
         </div>
+        <History style={ { opacity: this.state.showHistory ? '1' : '0' } } />
       </div>
     )
   }

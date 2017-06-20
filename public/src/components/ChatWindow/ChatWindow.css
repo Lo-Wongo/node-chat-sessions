@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: column;
   padding: 20px;
+  position: relative;
 }
 
 #ChatWindow__messagesParentContainer {
@@ -46,5 +47,12 @@ input {
   height: 30px;
   font-size: 15px;
   outline: none;
+}
 
+#ChatWindow__historyBtn {
+  position: absolute;
+  font-size: 20px;
+  right: 22px;
+  bottom: 70px;
+  cursor: pointer;
 }
