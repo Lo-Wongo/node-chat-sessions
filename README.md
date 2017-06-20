@@ -140,7 +140,6 @@ In this step, we will create a filter middleware file that will handle filtering
     while ( notAllowed.find( word => req.body.text.includes(word) ) ) {
       const badWord = notAllowed.find( word => req.body.text.includes(word) );
       req.body.text = req.body.text.replace( badWord, '*'.repeat( badWord.length ) );
-      req.session.user.warnings++;
     }
     ```
     
