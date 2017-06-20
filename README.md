@@ -122,13 +122,30 @@ app.listen( port, () => { console.log(`Server listening on port ${port}.`); } );
 
 ### Summary
 
-In this step, we will create a filter controller file that will handle filtering messages with profanity.
+In this step, we will create a filter middleware file that will handle filtering messages with profanity.
 
 ### Instructions
 
-* Create a `filter_controller.js` file in `server/controllers`.
-* Open `server/controllers/filter_controller.js`.
+* Create a folder called `middleware` in `server/`.
+* Create a file called `filter.js` in `server/middleware/`.
+* Open `server/middleware/filter.js`.
 * At the very top of the file create an array of words that should be censored.
+* Use `module.exports` to export a function that has a `req`, `res`, and `next` parameter.
+* Copy in the following filter code:
+  * <details>
+    
+    <summary> <code> filter logic </code> </summary>
+    
+    ```js
+    while ( notAllowed.find( word => req.body.text.includes(word) ) ) {
+      const badWord = notAllowed.find( word => req.body.text.includes(word) );
+      req.body.text = req.body.text.replace( badWord, '*'.repeat( badWord.length ) );
+      req.session.user.warnings++;
+    }
+    ```
+    
+    </details>
+* Call `next` after the `while` loop.
 
 ### Solution
 

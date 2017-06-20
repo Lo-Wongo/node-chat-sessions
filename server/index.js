@@ -2,7 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const mc = require( `${__dirname}/controllers/messages_controller` );
-const fc = require( `${__dirname}/controllers/filter_controller` );
+
+const filter = require( `${__dirname}/middleware/filter.js` );
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use( ( req, res, next ) => {
   }
 
   if ( method === "POST" ) {
-    fc.filter( req, res, next );
+    filter( req, res, next );
   } else {
     next();
   }
