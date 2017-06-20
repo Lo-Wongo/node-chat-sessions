@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const mc = require( `${__dirname}/controllers/messages_controller`);
+const mc = require( `${__dirname}/controllers/messages_controller` );
 const fc = require( `${__dirname}/controllers/filter_controller` );
 
 const app = express();
@@ -9,7 +9,7 @@ const app = express();
 app.use( bodyParser.json() );
 app.use( express.static( `${__dirname}/../public/build` ) );
 app.use( session({
-  secret: '@nyth!ng y0u w@nt',
+  secret: '@nyth!ng y0u w@nT',
   resave: false,
   saveUninitialized: false
 }));
