@@ -196,7 +196,7 @@ In this step, we'll require `server/middlewares/filter.js` in `server/index.js` 
 * Open `server/index.js`.
 * Require `server/middlewares/filter.js` in a variable called `filter`.
 * Add middleware to app that captures `req`, `res`, and `next`.
-* Check if the method of the request is `POST`, if it is call `filter` with `req`, `res`, and `next` as arguments. Otherwise just invoke `next`.
+* Check if the method of the request is `POST`. If it is `POST`, call `filter` with `req`, `res`, and `next` as arguments. Otherwise just invoke `next`.
   * The method of a request is defined on `req.method`.
 
 ### Solution
