@@ -43,8 +43,16 @@ export default class Message extends Component {
           :
             <span className="Message__text">{text}</span>
         }
-        <span className="Message__edit" onClick={ () => this.setState({ editting: !this.state.editting, text }) }> <FaPencil /> </span>
-        <span className="Message__delete" onClick={ () => remove( id ) }> <FaTrash /> </span>
+        {
+          this.props.hide
+          ?
+            <div>
+              <span className="Message__edit" onClick={ () => this.setState({ editting: !this.state.editting, text }) }> <FaPencil /> </span>
+              <span className="Message__delete" onClick={ () => remove( id ) }> <FaTrash /> </span>
+            </div>
+          :
+            null
+        }
       </div>
     )
   }

@@ -22,7 +22,10 @@
 }
 
 #History__messagesChildContainer {
-  width: 100%;
-  height: 100%;
+  width: calc( 100% - 30px );
+  height: calc( 100% - 30px );
+  padding: 15px;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: #f2f2f2;
 }
